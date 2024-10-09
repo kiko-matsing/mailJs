@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import emailjs from '@emailjs/browser';
+import axios from 'axios';
+
 
 const Mailjs = () => {
   const [name, setName] = useState("");
@@ -13,28 +14,46 @@ const Mailjs = () => {
     const templateId = "template_l4v41nt"
     const publicKey = "y77VhhP3PrgRq_WAP"
   
+    const data = {
+      service_id: serviceId,
+      template_id: templateId,
+      user_id: publicKey,
+      template_params: {
+        from_name: name,
+        from_email: email,
+        to_name: 'Kiko',
+        message: message
 
-  const templateParams = {
-    from_name: name,
-    from_email: email,
-    to_name: 'Kiko',
-    message: message
-
+      }
     }
 
-  emailjs.send(serviceId, templateId, templateParams, publicKey)
-    .then((response) => {
-      console.log("Email sent succesfully", response)
-      setName('')
-      setEmail('')
-      setMessage('')
-    })
-    .catch((error) => {
+      axios.post("https://api.emailjs.com/api/v1.0/email/send", data)
+        .then((res) => {
+          console.log(res.data);
+          setName('');
+          setEmail('');
+          setMessage('');
+     }
+     )
+     .catch((error) => {
       console.error('Error Sending Message', error)
-    })
-
-
+     })
   }
+
+
+  // emailjs.send(serviceId, templateId, templateParams, publicKey)
+  //   .then((response) => {
+  //     console.log("Email sent succesfully", response)
+  //     setName('')
+  //     setEmail('')
+  //     setMessage('')
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error Sending Message', error)
+  //   })
+
+
+  // }
   // const form = useRef();
 
   // const sendEmail = (e) => {
